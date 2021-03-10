@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "124434483956",
+    "project_id": "agrobazar-9b471",
+    "storage_bucket": "agrobazar-9b471.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:124434483956:android:4aadbfa0734132160c2ca1",
+        "android_client_info": {
+          "package_name": "com.vaibhav.agrobazarv1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "124434483956-ma2789r68caljt97625goa4f5n95vi4c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-IUz5XPJGXLfnoQdNXKBpXDC6t-nSYlA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "124434483956-ma2789r68caljt97625goa4f5n95vi4c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:124434483956:android:e0c9f53ca0a8f44e0c2ca1",
+        "android_client_info": {
+          "package_name": "com.vaibhav.auhentication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "124434483956-7u741a794dh8cneb9o63nfatf2nmc6h4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vaibhav.auhentication",
+            "certificate_hash": "c4e604a43bf13d73aa8d80d1ca2c837b1c9930d4"
+          }
+        },
+        {
+          "client_id": "124434483956-ma2789r68caljt97625goa4f5n95vi4c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-IUz5XPJGXLfnoQdNXKBpXDC6t-nSYlA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "124434483956-ma2789r68caljt97625goa4f5n95vi4c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
