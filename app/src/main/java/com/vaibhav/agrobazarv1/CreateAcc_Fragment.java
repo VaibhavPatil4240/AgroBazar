@@ -1,5 +1,6 @@
 package com.vaibhav.agrobazarv1;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,11 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.rilixtech.CountryCodePicker;
@@ -56,8 +56,6 @@ public class CreateAcc_Fragment extends Fragment {
     EditText fname,lname,pwd,pwdC,phno,gmail;
     TextView hiddenText;
     Button cAccbut;
-    ImageView bsignup;
-    ProgressBar loadsignup;
     CountryCodePicker ccp;
     public static CreateAcc_Fragment newInstance(String param1, String param2) {
         CreateAcc_Fragment fragment = new CreateAcc_Fragment();
@@ -76,6 +74,10 @@ public class CreateAcc_Fragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+    private createAcc interFace;
+   public interface createAcc{
+       void loadingProcess(int b);
+   }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,17 +86,31 @@ public class CreateAcc_Fragment extends Fragment {
         ((MainActivity)getActivity()).isCreated(true);
         View v= inflater.inflate(R.layout.fragment_create_acc, container, false);
         cAccbut= v.findViewById(R.id.buttonCreateAcc);
-        bsignup=v.findViewById(R.id.blurredsignup);
-        loadsignup=v.findViewById(R.id.signuploading);
-        bsignup.setVisibility(View.INVISIBLE);
-        loadsignup.setVisibility(View.INVISIBLE);
+        interFace.loadingProcess(0);
         cAccbut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                interFace.loadingProcess(1);
                 createAccount(v);
             }
         });
         return v;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof createAcc){
+            interFace=(createAcc) context;
+        }else {
+            throw new RuntimeException(context.toString()+"Must implement fragment listener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        interFace=null;
     }
 
     @Override
@@ -111,8 +127,6 @@ public class CreateAcc_Fragment extends Fragment {
         pwd=v.findViewById(R.id.passwordText);
         pwdC=v.findViewById(R.id.rtpasswordText);
         gmail=v.findViewById(R.id.gmailText);
-        bsignup=v.findViewById(R.id.blurredsignup);
-        loadsignup=v.findViewById(R.id.signuploading);
         String fn,ln,pn,pass,passC,gm;
         fn=fname.getText().toString();
         ln=lname.getText().toString();
@@ -150,8 +164,7 @@ public class CreateAcc_Fragment extends Fragment {
         }
         if (textCheck && pwdCheck)
         {
-            bsignup.setVisibility(View.VISIBLE);
-            loadsignup.setVisibility(View.VISIBLE);
+            interFace.loadingProcess(1);
             String url="https://agrobazarvaibhavpatil.000webhostapp.com/LogIn/Check_Registery.php";
             String qry="?t1="+pn.trim();
             Log.d("qry",qry);
@@ -160,8 +173,7 @@ public class CreateAcc_Fragment extends Fragment {
                 @Override
                 protected void onPostExecute(String s) {
                     super.onPostExecute(s);
-                    bsignup.setVisibility(View.INVISIBLE);
-                    loadsignup.setVisibility(View.INVISIBLE);
+                    interFace.loadingProcess(0);
                     if(s.trim().equals("0"))
                     {
                         Bundle bundle=new Bundle();

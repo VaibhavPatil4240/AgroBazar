@@ -21,7 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.logInListner {
+public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.logInListner ,CreateAcc_Fragment.createAcc,Verify_fragment.verfyingNumber{
     NavigationView nav;
     ImageView cartB;
     Toolbar toolbar;

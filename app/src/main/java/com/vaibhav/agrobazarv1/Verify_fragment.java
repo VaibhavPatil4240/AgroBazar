@@ -1,5 +1,6 @@
 package com.vaibhav.agrobazarv1;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,9 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -50,9 +48,6 @@ public class Verify_fragment extends Fragment {
     public Verify_fragment() {
         // Required empty public constructor
     }
-    ImageView blurred;
-    ProgressBar loadingVerify;
-    TextView verifying;
     EditText otp;
     Button verifyButton;
     String fn,ln,pass,gm,pn,otpid;
@@ -66,7 +61,10 @@ public class Verify_fragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
+    private verfyingNumber verfyingInterface;
+    public interface verfyingNumber{
+        void loadingProcess(int b);
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,9 +82,6 @@ public class Verify_fragment extends Fragment {
         View v=inflater.inflate(R.layout.fragment_verify, container, false);
         verifyButton=v.findViewById(R.id.verifyButton);
         ((MainActivity)getActivity()).isCreated(true);
-        blurred=v.findViewById(R.id.blurredVerify);
-        loadingVerify=v.findViewById(R.id.progressBar);
-        verifying=v.findViewById(R.id.verifying);
         otp=v.findViewById(R.id.otpText);
         pn =getArguments().getString("pn");
         fn =getArguments().getString("fn");
@@ -94,13 +89,8 @@ public class Verify_fragment extends Fragment {
         pass =getArguments().getString("pass");
         gm=getArguments().getString("gm");
         mAuth=FirebaseAuth.getInstance();
-        blurred.setVisibility(View.VISIBLE);
-        loadingVerify.setVisibility(View.VISIBLE);
-        verifying.setVisibility(View.VISIBLE);
+        verfyingInterface.loadingProcess(1);
         intiateOTP();
-        blurred.setVisibility(View.INVISIBLE);
-        loadingVerify.setVisibility(View.INVISIBLE);
-        verifying.setVisibility(View.INVISIBLE);
         verifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,15 +104,29 @@ public class Verify_fragment extends Fragment {
                     }
                     else
                     {
-                        blurred.setVisibility(View.VISIBLE);
-                        loadingVerify.setVisibility(View.VISIBLE);
-                        verifying.setVisibility(View.VISIBLE);
+                       verfyingInterface.loadingProcess(1);
                         PhoneAuthCredential credential=PhoneAuthProvider.getCredential(otpid,otp.getText().toString());
                         signInWithPhoneAuthCredential(credential);
                     }
             }
         });
         return  v;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof verfyingNumber){
+            verfyingInterface=(verfyingNumber) context;
+        }else {
+            throw new RuntimeException(context.toString()+"Must implement fragment listener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        verfyingInterface=null;
     }
 
     @Override
@@ -137,6 +141,7 @@ public class Verify_fragment extends Fragment {
             public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
                 otpid=s;
+                verfyingInterface.loadingProcess(0);
             }
 
             @Override
@@ -151,6 +156,7 @@ public class Verify_fragment extends Fragment {
         });
     }
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        verfyingInterface.loadingProcess(1);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
@@ -167,6 +173,8 @@ public class Verify_fragment extends Fragment {
     }
     public void createAccount()
     {
+        verfyingInterface.loadingProcess(1);
+
         String url="https://agrobazarvaibhavpatil.000webhostapp.com/LogIn/SignUp.php";
         String qry="?t1="+pn.substring(3)+"&t2="+pass+"&t3="+fn.trim()+"&t4="+ln+"&t5="+gm+"&t6="+pn.substring(0,3);
         Log.d("qry",qry);
@@ -175,6 +183,7 @@ public class Verify_fragment extends Fragment {
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
+                verfyingInterface.loadingProcess(0);
                 if(s.equals("Some error occured"))
                 {
                     Toast.makeText(getContext(),s, Toast.LENGTH_SHORT).show();
