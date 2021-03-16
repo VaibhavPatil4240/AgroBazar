@@ -3,7 +3,6 @@ package com.vaibhav.agrobazarv1;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,13 +20,13 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.logInListner ,CreateAcc_Fragment.createAcc,Verify_fragment.verfyingNumber{
+public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.logInListner ,CreateAcc_Fragment.createAcc,Verify_fragment.verfyingNumber,forgotPassword_fragment.forgotPass{
     NavigationView nav;
     ImageView cartB;
     Toolbar toolbar;
     ActionBarDrawerToggle toggle;
     DrawerLayout drawer;
-    TextView view;
+    TextView view,loadingText;
     ImageView logo,loadingImg;
     ProgressBar pb;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -37,8 +36,10 @@ public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.l
         setContentView(R.layout.activity_main);
         setSupportActionBar(toolbar);
         loadingImg=findViewById(R.id.loadingImg);
+        loadingText=findViewById(R.id.loadingText);
         pb=findViewById(R.id.logInloading);
         loadingProcess(0);
+        loadingProcess(0,"");
         logo=findViewById(R.id.logo);
         cartB = findViewById(R.id.cartButton);
         toolbar = findViewById(R.id.toolbar);
@@ -107,7 +108,6 @@ public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.l
     }
     public void loadingProcess(int b)
     {
-        Log.d("usecase", String.valueOf(b));
         switch (b)
         {
             case 1:
@@ -118,6 +118,26 @@ public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.l
             case 0:
                 loadingImg.setVisibility(View.INVISIBLE);
                 pb.setVisibility(View.INVISIBLE);
+                break;
+            default:
+                break;
+        }
+    }
+    public void loadingProcess(int b,String s)
+    {
+        switch (b)
+        {
+            case 1:
+                loadingImg.setVisibility(View.VISIBLE);
+                loadingImg.setAlpha(0.9f);
+                pb.setVisibility(View.VISIBLE);
+                loadingText.setText(s);
+                loadingText.setVisibility(View.VISIBLE);
+                break;
+            case 0:
+                loadingImg.setVisibility(View.INVISIBLE);
+                pb.setVisibility(View.INVISIBLE);
+                loadingText.setVisibility(View.INVISIBLE);
                 break;
             default:
                 break;

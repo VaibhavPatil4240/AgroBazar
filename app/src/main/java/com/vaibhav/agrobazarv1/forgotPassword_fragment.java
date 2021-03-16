@@ -1,5 +1,6 @@
-package com.vaibhav.agrobazarv1;
+  package com.vaibhav.agrobazarv1;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,6 +49,11 @@ public class forgotPassword_fragment extends Fragment {
         // Required empty public constructor
     }
 
+
+    forgotPass fp;
+    interface forgotPass{
+        void loadingProcess(int b,String s);
+    };
     EditText phno,otp,newpass,newpassC;
     Button verify,changePass;
     String ccphno,otpid;
@@ -100,6 +106,7 @@ public class forgotPassword_fragment extends Fragment {
                 }
                 else
                 {
+                    fp.loadingProcess(0,"");
                     if(otp.getText().toString().isEmpty())
                     {
                         Toast.makeText(getContext(),"Please Enter OTP",Toast.LENGTH_SHORT).show();
@@ -139,11 +146,13 @@ public class forgotPassword_fragment extends Fragment {
             String url="https://agrobazarvaibhavpatil.000webhostapp.com/LogIn/verifyNum.php";
             String qry="?t1="+pn.trim();
             Log.d("qry",qry);
+            fp.loadingProcess(1,"Verifying Number");
             class createaccproc extends AsyncTask<String,Void,String>
             {
                 @Override
                 protected void onPostExecute(String s) {
                     super.onPostExecute(s);
+                    fp.loadingProcess(0,"");
                     if(s.trim().equals("1"))
                     {
                         Toast.makeText(getContext(),"Account not found", Toast.LENGTH_SHORT).show();
@@ -173,11 +182,28 @@ public class forgotPassword_fragment extends Fragment {
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof forgotPass){
+            fp=(forgotPass) context;
+        }else {
+            throw new RuntimeException(context.toString()+"Must implement fragment listener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        fp=null;
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         ((MainActivity)getActivity()).isCreated(false);
     }
     private void intiateOTP() {
+        fp.loadingProcess(1,"getting OTP");
         otp.setVisibility(View.VISIBLE);
         phno.setVisibility(View.INVISIBLE);
         PhoneAuthProvider.getInstance().verifyPhoneNumber(ccphno, 60, TimeUnit.SECONDS, getActivity(), new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -185,6 +211,7 @@ public class forgotPassword_fragment extends Fragment {
             public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
                 otpid=s;
+                fp.loadingProcess(0,"");
             }
 
             @Override
@@ -199,11 +226,13 @@ public class forgotPassword_fragment extends Fragment {
         });
     }
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        fp.loadingProcess(1,"Verifying OTP");
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            fp.loadingProcess(0,"");
                             Toast.makeText(getContext(),"Verified Successfully",Toast.LENGTH_SHORT).show();
                             otp.setVisibility(View.INVISIBLE);
                             phno.setVisibility(View.INVISIBLE);
@@ -220,6 +249,7 @@ public class forgotPassword_fragment extends Fragment {
     }
     private void changePassword(String np,String pas)
     {
+        fp.loadingProcess(0,"");
         String url="https://agrobazarvaibhavpatil.000webhostapp.com/LogIn/changePass.php";
         String qry="?t1="+np.trim()+"&t2="+pas.trim();
         Log.d("qry",qry);
@@ -228,6 +258,7 @@ public class forgotPassword_fragment extends Fragment {
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
+                fp.loadingProcess(0,"");
                 if(s.trim().equals("1"))
                 {
                     Toast.makeText(getContext(),"Password changed successfully", Toast.LENGTH_SHORT).show();

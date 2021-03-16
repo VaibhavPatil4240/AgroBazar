@@ -71,7 +71,7 @@ public class Home_fragment extends Fragment {
                 GsonBuilder builder=new GsonBuilder();
                 Gson gson=builder.create();
                 data=gson.fromJson(response,HomePageDatum[].class);
-                homeAdapter adapter=new homeAdapter(data,getContext());
+                homeAdapter adapter=new homeAdapter(data,getContext(),(MainActivity)getActivity());
                 recview.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }

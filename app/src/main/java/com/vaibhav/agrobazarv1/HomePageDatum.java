@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class HomePageDatum {
 
+    @SerializedName("id")
+    @Expose
+    private String id;
     @SerializedName("prodID")
     @Expose
     private String prodID;
@@ -33,6 +36,17 @@ public class HomePageDatum {
     @SerializedName("unit")
     @Expose
     private String unit;
+    @SerializedName("rating")
+    @Expose
+    private String rating;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getProdID() {
         return prodID;
@@ -104,6 +118,14 @@ public class HomePageDatum {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 
 }

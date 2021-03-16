@@ -36,9 +36,6 @@ public class LogIn_Fragment extends Fragment {
     private String mParam1;
     private String mParam2;
     Button b;
-    ViewGroup progressView;
-    protected boolean isProgressShowing = false;
-    private View v1;
     EditText t1;
     EditText t2;
     TextView invalidInput;
