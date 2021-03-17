@@ -25,6 +25,5 @@ public class homeViewHolder extends RecyclerView.ViewHolder {
         st3=itemView.findViewById(R.id.star3);
         st4=itemView.findViewById(R.id.star4);
         st5=itemView.findViewById(R.id.star5);
-
     }
 }
