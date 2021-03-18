@@ -1,13 +1,18 @@
 package com.vaibhav.agrobazarv1;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -17,6 +22,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,11 +45,20 @@ public class singleProduct_Fragment extends Fragment {
     private String mParam1;
     private String mParam2;
     String s;
+    int ratings=0;
     boolean stockFlag=true;
-    TextView name,dileveryExp,disc,price;
-    ImageView prodImg,st1,st2,st3,st4,st5;
+    View bkView;
+    TextView name,dileveryExp,disc,price,cancel,rateSeller2;
+    ImageView prodImg,st1,st2,st3,st4,st5,bkImg,rst1,rst2,rst3,rst4,rst5;
+    boolean s1,s2,s3,s4,s5;
+    Button rateSeller;
     final static String imgURL="https://agrobazarvaibhavpatil.000webhostapp.com/ProductImages/";
     public HomePageDatum data;
+    singleMainListner smListner;
+    interface singleMainListner
+    {
+        String getUser();
+    }
     public singleProduct_Fragment() {
         // Required empty public constructor
     }
@@ -77,6 +97,7 @@ public class singleProduct_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_single_product, container, false);
+        s1=s2=s3=s4=s5=false;
         name=view.findViewById(R.id.prodName);
         name.setText(data.getName());
         price=view.findViewById(R.id.price);
@@ -86,6 +107,21 @@ public class singleProduct_Fragment extends Fragment {
         prodImg=view.findViewById(R.id.prodImg);
         Glide.with(prodImg.getContext()).load(imgURL+data.getImg()).into(prodImg);
         dileveryExp=view.findViewById(R.id.dilveryExp);
+        bkImg=view.findViewById(R.id.BackgroundImg);
+        bkView=view.findViewById(R.id.bkView);
+        cancel=view.findViewById(R.id.cancel);
+        rst1=view.findViewById(R.id.rStar1);
+        rst2=view.findViewById(R.id.rStar2);
+        rst3=view.findViewById(R.id.rStar3);
+        rst4=view.findViewById(R.id.rStar4);
+        rst5=view.findViewById(R.id.rStar5);
+        rateSeller=view.findViewById(R.id.rateSeller);
+        rateSeller.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RateSeller(true,false);
+            }
+        });
         st1=view.findViewById(R.id.star1);
         st2=view.findViewById(R.id.star2);
         st3=view.findViewById(R.id.star3);
@@ -138,21 +174,83 @@ public class singleProduct_Fragment extends Fragment {
             default:
                 break;
         }
-        dateTime(view);
+        dateTime();
+        rateSeller2=view.findViewById(R.id.rateSeller1);
+        rateSeller2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RateSeller(false,true);
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RateSeller(false,false);
+            }
+        });
+        rst1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setSrcRstar(1,s1);
+            }
+        });
+        rst2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setSrcRstar(2,s2);
+            }
+        });
+        rst3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setSrcRstar(3,s3);
+            }
+        });
+        rst4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setSrcRstar(4,s4);
+
+            }
+        });
+        rst5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setSrcRstar(5,s5);
+            }
+        });
+        RateSeller(false,false);
         return view;
     }
-    void dateTime(View v)
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof singleMainListner){
+            smListner=(singleMainListner) context;
+        }else {
+            throw new RuntimeException(context.toString()+"Must implement fragment listener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        smListner=null;
+    }
+
+    void dateTime()
     {
         String url="https://agrobazarvaibhavpatil.000webhostapp.com/Orders/SystemDateTime.php";
         StringRequest request= new StringRequest(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                setDisc(response,v);
+                setDisc(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                setDisc("",v);
+                Toast.makeText(getContext(),"Weak Internet connection",Toast.LENGTH_SHORT).show();
             }
         });
         RequestQueue queue= new Volley().newRequestQueue(getContext());
@@ -160,7 +258,7 @@ public class singleProduct_Fragment extends Fragment {
     }
 
 
-    void setDisc(String s,View view)
+    void setDisc(String s)
     {
         String d[]=s.split("&");
         String dt=d[0];
@@ -170,26 +268,194 @@ public class singleProduct_Fragment extends Fragment {
         min=time[1];
         sec=time[2];
         ampm=sec.substring(2);
+        int Hr=Integer.parseInt(hr);
+        Log.d("Time",ampm);
+        if(ampm.equals("pm"))
+        {
+            Hr=Hr+12;
+        }
         if(Integer.parseInt(data.getStock())==0)
         {
-            dileveryExp.setText("Out of Stock! Unable to dilever the product");
             dileveryExp.setTextColor(ContextCompat.getColor(getContext(),R.color.red));
+            dileveryExp.setText("Out of Stock! Unable to dilever the product");
             stockFlag=false;
         }
         else
         {
+            Log.d("Time", String.valueOf(Hr));
             dileveryExp.setTextColor(ContextCompat.getColor(getContext(),R.color.green));
-            if(Integer.parseInt(hr)>6 && (Integer.parseInt(hr)<15) )
+            if(Hr>6 && Hr<16)
             {
-                Log.d("slot","hr : "+hr);
                 dileveryExp.setText("In stock\nDelivery expected by 5-5:30 PM Today");
             }
             else
             {
-                dileveryExp.setText("In stock\n Delivery expected by 8-8:30 AM Tomorrow");
+                dileveryExp.setText("In stock\nDelivery expected by 8-8:30 AM Tomorrow");
             }
         }
 
 
+    }
+    void RateSeller(boolean b,boolean c)
+    {
+        if(b)
+        {
+            bkView.setVisibility(View.VISIBLE);
+            cancel.setVisibility(View.VISIBLE);
+            bkImg.setVisibility(View.VISIBLE);
+            rateSeller2.setVisibility(View.VISIBLE);
+            rateSeller2.bringToFront();
+            rst1.setVisibility(View.VISIBLE);
+            rst2.setVisibility(View.VISIBLE);
+            rst3.setVisibility(View.VISIBLE);
+            rst4.setVisibility(View.VISIBLE);
+            rst5.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            bkView.setVisibility(View.INVISIBLE);
+            cancel.setVisibility(View.INVISIBLE);
+            bkImg.setVisibility(View.INVISIBLE);
+            rateSeller2.setVisibility(View.GONE);
+            rst1.setVisibility(View.INVISIBLE);
+            rst2.setVisibility(View.INVISIBLE);
+            rst3.setVisibility(View.INVISIBLE);
+            rst4.setVisibility(View.INVISIBLE);
+            rst5.setVisibility(View.INVISIBLE);
+            if(c) {
+                if (s5) {
+                    ratings = 5;
+                } else if (s4) {
+                    ratings = 4;
+                } else if (s3) {
+                    ratings = 3;
+                } else if (s2) {
+                    ratings = 2;
+                } else if (s1) {
+                    ratings = 1;
+                } else {
+                    ratings = 0;
+                }
+                insertRatings();
+            }
+        }
+    }
+    public void setSrcRstar(int c,boolean b)
+    {
+        switch (c)
+        {
+            case 1:
+                if(b)
+                {
+                    rst1.setImageResource(R.drawable.starratingfillcopy);
+                    rst2.setImageResource(R.drawable.starratingfillcopy);
+                    rst3.setImageResource(R.drawable.starratingfillcopy);
+                    rst4.setImageResource(R.drawable.starratingfillcopy);
+                    rst5.setImageResource(R.drawable.starratingfillcopy);
+                    s1=s2=s3=s4=s5=false;
+                }
+                else
+                {
+                    rst1.setImageResource(R.drawable.stars);
+                    s1=true;
+                }
+                break;
+            case 2:
+                if(b)
+                {
+                    rst2.setImageResource(R.drawable.starratingfillcopy);
+                    rst3.setImageResource(R.drawable.starratingfillcopy);
+                    rst4.setImageResource(R.drawable.starratingfillcopy);
+                    rst5.setImageResource(R.drawable.starratingfillcopy);
+                    s2=s3=s4=s5=false;
+                }
+                else
+                {
+                    rst1.setImageResource(R.drawable.stars);
+                    rst2.setImageResource(R.drawable.stars);
+                    s1=s2=true;
+                }
+                break;
+            case 3:
+                if(b)
+                {
+                    rst3.setImageResource(R.drawable.starratingfillcopy);
+                    rst4.setImageResource(R.drawable.starratingfillcopy);
+                    rst5.setImageResource(R.drawable.starratingfillcopy);
+                    s3=s4=s5=false;
+                }
+                else
+                {
+                    rst1.setImageResource(R.drawable.stars);
+                    rst2.setImageResource(R.drawable.stars);
+                    rst3.setImageResource(R.drawable.stars);
+                    s1=s2=s3=true;
+                }
+                break;
+            case 4:
+                if(b)
+                {
+                    rst4.setImageResource(R.drawable.starratingfillcopy);
+                    rst5.setImageResource(R.drawable.starratingfillcopy);
+                    s4=s5=false;
+                }
+                else {
+                    rst1.setImageResource(R.drawable.stars);
+                    rst2.setImageResource(R.drawable.stars);
+                    rst3.setImageResource(R.drawable.stars);
+                    rst4.setImageResource(R.drawable.stars);
+                    s1 = s2 = s3 = s4 = true;
+                }
+                break;
+            case 5:
+                if(b)
+                {
+                    rst5.setImageResource(R.drawable.starratingfillcopy);
+                    s5=false;
+                }
+                else {
+                    rst1.setImageResource(R.drawable.stars);
+                    rst2.setImageResource(R.drawable.stars);
+                    rst3.setImageResource(R.drawable.stars);
+                    rst4.setImageResource(R.drawable.stars);
+                    rst5.setImageResource(R.drawable.stars);
+                    s1 = s2 = s3 = s4 =s5= true;
+                }
+                break;
+            default:
+                break;
+
+        }
+    }
+    public void insertRatings()
+    {
+        String url="https://agrobazarvaibhavpatil.000webhostapp.com/SellerCustomer/ratings.php";
+        String t1=smListner.getUser();
+        String t2=data.getSellerID();
+        String t3=String.valueOf(ratings);
+        String qry="?t1="+t1.trim()+"&t2="+t2.trim()+"&t3="+t3.trim();
+        class ratingsSeller extends AsyncTask<String,Void,String>
+        {
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                Toast.makeText(getContext(),"Submitted",Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            protected String doInBackground(String... strings){
+                String furl=strings[0];
+                try {
+                    URL url=new URL(furl);
+                    HttpsURLConnection conn=(HttpsURLConnection)url.openConnection();
+                    BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    return br.readLine();
+                } catch (Exception e) {
+                    return e.getMessage();
+                }
+            }
+        }
+        ratingsSeller rs=new ratingsSeller();
+        rs.execute(url+qry);
     }
 }
