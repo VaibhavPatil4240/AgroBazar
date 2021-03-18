@@ -1,6 +1,7 @@
 package com.vaibhav.agrobazarv1;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,7 +32,6 @@ public class LogIn_Fragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -74,9 +74,9 @@ public class LogIn_Fragment extends Fragment {
     }
     private  logInListner loggedIn;
     public interface logInListner{
-        void clikedLogIn();
-        public void setName(String s);
         void loadingProcess(int b);
+        void isCreated(boolean b);
+        void setName();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,7 +96,7 @@ public class LogIn_Fragment extends Fragment {
         createacc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getContext()).getSupportFragmentManager().beginTransaction().replace(R.id.container, new CreateAcc_Fragment()).commit();
+                ((MainActivity)getContext()).getSupportFragmentManager().beginTransaction().replace(R.id.container, new CreateAcc_Fragment()).addToBackStack(null).commit();
             }
         });
         b.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +109,7 @@ public class LogIn_Fragment extends Fragment {
         forgotPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getContext()).getSupportFragmentManager().beginTransaction().replace(R.id.container, new forgotPassword_fragment()).commit();
+                ((MainActivity)getContext()).getSupportFragmentManager().beginTransaction().replace(R.id.container, new forgotPassword_fragment()).addToBackStack(null).commit();
             }
         });
         return v;
@@ -128,7 +128,7 @@ public class LogIn_Fragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ((MainActivity)getActivity()).isCreated(false);
+        loggedIn.isCreated(false);
     }
 
     @Override
@@ -153,10 +153,12 @@ public class LogIn_Fragment extends Fragment {
                     invalidInput.setText("Invalid username or password");
                 }
                 else {
-                    loggedIn.setName(s);
-                    loggedIn.clikedLogIn();
+                    SharedPreferences.Editor editor=getContext().getSharedPreferences("login",Context.MODE_PRIVATE).edit();
+                    editor.putString("Name",s);
+                    editor.apply();
+                    loggedIn.setName();
+                    ((MainActivity)getContext()).getSupportFragmentManager().beginTransaction().replace(R.id.container, new Home_fragment()).commit();
                 }
-
             }
 
             @Override

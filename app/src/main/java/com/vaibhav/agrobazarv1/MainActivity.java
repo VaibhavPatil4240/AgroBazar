@@ -1,6 +1,8 @@
 package com.vaibhav.agrobazarv1;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -17,10 +19,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.logInListner ,CreateAcc_Fragment.createAcc,Verify_fragment.verfyingNumber,forgotPassword_fragment.forgotPass{
+public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.logInListner ,CreateAcc_Fragment.createAcc,Verify_fragment.verfyingNumber,forgotPassword_fragment.forgotPass,singleProduct_Fragment.singleMainListner{
     NavigationView nav;
     ImageView cartB;
     Toolbar toolbar;
@@ -29,10 +32,13 @@ public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.l
     TextView view,loadingText;
     ImageView logo,loadingImg;
     ProgressBar pb;
+    SharedPreferences sp;
+    String nameID,userid,username;;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sp=getSharedPreferences("login", Context.MODE_PRIVATE);
         setContentView(R.layout.activity_main);
         setSupportActionBar(toolbar);
         loadingImg=findViewById(R.id.loadingImg);
@@ -51,7 +57,19 @@ public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.l
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.openDrawer, R.string.colseDrawer);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new LogIn_Fragment()).commit();
+        nameID=sp.getString("Name",null);
+        if(nameID==null)
+        {
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new LogIn_Fragment()).commit();
+        }
+        else
+        {
+            String ni[]=nameID.split("-");
+            userid=ni[0];
+            username=ni[1];
+            view.setText("Hello "+username);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new Home_fragment()).commit();
+        }
         nav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             Fragment temp;
 
@@ -72,9 +90,14 @@ public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.l
                         break;
                     case R.id.Logout:
                         temp=new LogIn_Fragment();
+                        SharedPreferences.Editor editor=getSharedPreferences("login",Context.MODE_PRIVATE).edit();
+                        editor.remove("Name");
+                        editor.commit();
 
                 }
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, temp).commit();
+                FragmentTransaction ft=getSupportFragmentManager().beginTransaction().replace(R.id.container, temp);
+                ft.addToBackStack(null);
+                ft.commit();
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
@@ -83,7 +106,7 @@ public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.l
         cartB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new Cart_Fragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new Cart_Fragment()).addToBackStack(null).commit();
             }
         });
     }
@@ -143,11 +166,13 @@ public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.l
                 break;
         }
     }
-    public void setName(String s){
-        view.setText("Hello "+s);
+    public void setName()
+    {
+       String arr[]= sp.getString("Name","Use-er").split("-");
+        view.setText("Hello "+arr[1]);
     }
-    @Override
-    public void clikedLogIn() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new Home_fragment()).commit();
+    public String getUser()
+    {
+        return userid;
     }
 }

@@ -11,13 +11,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginBottom="20dp"
-        >
+        app:layout_constraintTop_toTopOf="parent">
+
         <TextView
             android:id="@+id/prodName"
             android:layout_width="154dp"
@@ -34,9 +34,9 @@
             android:id="@+id/price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
             android:layout_marginTop="24dp"
             android:layout_marginRight="16dp"
-            android:layout_marginLeft="16dp"
             android:text="Price :"
             android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -125,9 +125,9 @@
             android:id="@+id/disc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
             android:layout_marginTop="32dp"
             android:layout_marginRight="16dp"
-            android:layout_marginLeft="16dp"
             android:text="Discription"
             android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -165,9 +165,9 @@
             android:id="@+id/dilveryExp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
             android:layout_marginTop="32dp"
             android:layout_marginRight="16dp"
-            android:layout_marginLeft="16dp"
             android:text="In stock"
             android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -208,6 +208,117 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rateSeller"
             app:layout_constraintVertical_bias="0.053" />
+
+        <ImageView
+            android:id="@+id/BackgroundImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/loadingimg1"
+            android:translationZ="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/bkView"
+            android:layout_width="322dp"
+            android:layout_height="217dp"
+            android:layout_marginTop="480dp"
+            android:background="#F0FFC4"
+            android:translationZ="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.471"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/BackgroundImg" />
+
+        <TextView
+            android:id="@+id/rateSeller1"
+            android:layout_width="205dp"
+            android:layout_height="57dp"
+            android:layout_marginTop="20dp"
+            android:background="#ECE7E1"
+            android:paddingTop="10dp"
+            android:text="Rate Seller"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="25dp"
+            android:translationZ="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rStar1" />
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="205dp"
+            android:layout_height="57dp"
+            android:layout_marginTop="80dp"
+            android:background="#ECE7E1"
+            android:paddingTop="10dp"
+            android:text="Cancel"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="25dp"
+            android:translationZ="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rStar1" />
+
+        <ImageView
+            android:id="@+id/rStar1"
+            android:layout_width="48dp"
+            android:layout_height="43dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="496dp"
+            android:src="@drawable/starratingfillcopy"
+            android:translationZ="6dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/rStar4"
+            android:layout_width="48dp"
+            android:layout_height="43dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="496dp"
+            android:src="@drawable/starratingfillcopy"
+            android:translationZ="6dp"
+            app:layout_constraintStart_toEndOf="@+id/rStar3"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/rStar5"
+            android:layout_width="48dp"
+            android:layout_height="43dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="496dp"
+            android:src="@drawable/starratingfillcopy"
+            android:translationZ="6dp"
+            app:layout_constraintStart_toEndOf="@+id/rStar4"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/rStar3"
+            android:layout_width="48dp"
+            android:layout_height="43dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="496dp"
+            android:src="@drawable/starratingfillcopy"
+            android:translationZ="6dp"
+            app:layout_constraintStart_toEndOf="@+id/rStar2"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/rStar2"
+            android:layout_width="48dp"
+            android:layout_height="43dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="496dp"
+            android:src="@drawable/starratingfillcopy"
+            android:translationZ="6dp"
+            app:layout_constraintStart_toEndOf="@+id/rStar1"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
