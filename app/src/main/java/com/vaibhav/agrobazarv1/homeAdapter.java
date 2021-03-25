@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-public class homeAdapter extends RecyclerView.Adapter<homeViewHolder> {
+public class  homeAdapter extends RecyclerView.Adapter<homeViewHolder> {
 
     HomePageDatum [] data;
     Context context;
@@ -93,7 +93,7 @@ public class homeAdapter extends RecyclerView.Adapter<homeViewHolder> {
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fa.getSupportFragmentManager().beginTransaction().replace(R.id.container,new singleProduct_Fragment(datum)).commit();
+                fa.getSupportFragmentManager().beginTransaction().replace(R.id.container,new singleProduct_Fragment(datum)).addToBackStack(null).commit();
             }
         });
 

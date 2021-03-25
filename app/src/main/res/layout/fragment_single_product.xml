@@ -144,8 +144,9 @@
             android:background="@color/orange"
             android:text="Buy Now"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.485"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dilveryExp" />
+            app:layout_constraintTop_toBottomOf="@+id/amountEditText" />
 
         <Button
             android:id="@+id/addToCart"
@@ -213,6 +214,8 @@
             android:id="@+id/BackgroundImg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="invisible"
+            android:alpha="0.75"
             android:scaleType="fitXY"
             android:src="@drawable/loadingimg1"
             android:translationZ="6dp"
@@ -225,7 +228,7 @@
             android:id="@+id/bkView"
             android:layout_width="322dp"
             android:layout_height="217dp"
-            android:layout_marginTop="480dp"
+            android:layout_marginTop="400dp"
             android:background="#F0FFC4"
             android:translationZ="6dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -253,7 +256,7 @@
             android:id="@+id/cancel"
             android:layout_width="205dp"
             android:layout_height="57dp"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="8dp"
             android:background="#ECE7E1"
             android:paddingTop="10dp"
             android:text="Cancel"
@@ -263,14 +266,39 @@
             android:translationZ="6dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rStar1" />
+            app:layout_constraintTop_toBottomOf="@+id/rateSeller1" />
+
+        <ImageView
+            android:id="@+id/rStar5"
+            android:visibility="invisible"
+            android:layout_width="48dp"
+            android:layout_height="43dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="416dp"
+            android:src="@drawable/starratingfillcopy"
+            android:translationZ="6dp"
+            app:layout_constraintStart_toEndOf="@+id/rStar4"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/rStar2"
+            android:layout_width="48dp"
+            android:visibility="invisible"
+            android:layout_height="43dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="416dp"
+            android:src="@drawable/starratingfillcopy"
+            android:translationZ="6dp"
+            app:layout_constraintStart_toEndOf="@+id/rStar1"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/rStar1"
             android:layout_width="48dp"
+            android:visibility="invisible"
             android:layout_height="43dp"
             android:layout_marginStart="64dp"
-            android:layout_marginTop="496dp"
+            android:layout_marginTop="416dp"
             android:src="@drawable/starratingfillcopy"
             android:translationZ="6dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -279,46 +307,49 @@
         <ImageView
             android:id="@+id/rStar4"
             android:layout_width="48dp"
+            android:visibility="invisible"
             android:layout_height="43dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="496dp"
+            android:layout_marginTop="416dp"
             android:src="@drawable/starratingfillcopy"
             android:translationZ="6dp"
             app:layout_constraintStart_toEndOf="@+id/rStar3"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/rStar5"
-            android:layout_width="48dp"
-            android:layout_height="43dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="496dp"
-            android:src="@drawable/starratingfillcopy"
-            android:translationZ="6dp"
-            app:layout_constraintStart_toEndOf="@+id/rStar4"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
             android:id="@+id/rStar3"
             android:layout_width="48dp"
+            android:visibility="invisible"
             android:layout_height="43dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="496dp"
+            android:layout_marginTop="416dp"
             android:src="@drawable/starratingfillcopy"
             android:translationZ="6dp"
             app:layout_constraintStart_toEndOf="@+id/rStar2"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/rStar2"
-            android:layout_width="48dp"
-            android:layout_height="43dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="496dp"
-            android:src="@drawable/starratingfillcopy"
-            android:translationZ="6dp"
-            app:layout_constraintStart_toEndOf="@+id/rStar1"
-            app:layout_constraintTop_toTopOf="parent" />
+        <EditText
+            android:id="@+id/amountEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:hint="Amount"
+            android:layout_marginTop="52dp"
+            android:ems="10"
+            android:inputType="number"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rStar1" />
+
+        <TextView
+            android:id="@+id/unitForAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textSize="20dp"
+            android:layout_marginTop="12dp"
+            android:text="TextView"
+            app:layout_constraintStart_toEndOf="@+id/amountEditText"
+            app:layout_constraintTop_toTopOf="@+id/amountEditText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

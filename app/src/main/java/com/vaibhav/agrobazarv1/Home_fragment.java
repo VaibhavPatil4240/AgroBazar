@@ -78,7 +78,6 @@ public class Home_fragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
             }
         });
         RequestQueue queue= new Volley().newRequestQueue(getContext());

@@ -1,10 +1,13 @@
 package com.vaibhav.agrobazarv1;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,9 +24,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
-public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.logInListner ,CreateAcc_Fragment.createAcc,Verify_fragment.verfyingNumber,forgotPassword_fragment.forgotPass,singleProduct_Fragment.singleMainListner{
+public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.logInListner ,CreateAcc_Fragment.createAcc,Verify_fragment.verfyingNumber,forgotPassword_fragment.forgotPass,singleProduct_Fragment.singleMainListner,Account_Fragment.accountInfo,address_Fragment.addressFrag{
+    private static final String CHANNEL_ID ="101";
     NavigationView nav;
     ImageView cartB;
     Toolbar toolbar;
@@ -38,6 +45,8 @@ public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.l
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createNotificationChannel();
+        getToken();
         sp=getSharedPreferences("login", Context.MODE_PRIVATE);
         setContentView(R.layout.activity_main);
         setSupportActionBar(toolbar);
@@ -135,7 +144,7 @@ public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.l
         {
             case 1:
                 loadingImg.setVisibility(View.VISIBLE);
-                loadingImg.setAlpha(0.9f);
+                loadingImg.setAlpha(0.75f);
                 pb.setVisibility(View.VISIBLE);
                 break;
             case 0:
@@ -152,9 +161,9 @@ public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.l
         {
             case 1:
                 loadingImg.setVisibility(View.VISIBLE);
-                loadingImg.setAlpha(0.9f);
+                loadingImg.setAlpha(0.75f);
                 pb.setVisibility(View.VISIBLE);
-                loadingText.setText(s);
+                loadingText.setText("         "+s);
                 loadingText.setVisibility(View.VISIBLE);
                 break;
             case 0:
@@ -169,10 +178,35 @@ public class MainActivity extends AppCompatActivity  implements LogIn_Fragment.l
     public void setName()
     {
        String arr[]= sp.getString("Name","Use-er").split("-");
-        view.setText("Hello "+arr[1]);
+       userid=arr[0];
+       view.setText("Hello "+arr[1]);
     }
     public String getUser()
     {
         return userid;
+    }
+    private void getToken()
+    {
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                Log.d("Token",instanceIdResult.getToken());
+            }
+        });
+    }
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Firebase notification channel";
+            String description = "This is the channel to recieve notification";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }

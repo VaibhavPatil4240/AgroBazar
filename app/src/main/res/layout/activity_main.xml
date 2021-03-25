@@ -25,10 +25,13 @@
         android:id="@+id/loadingText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Testing"
+        android:text="           Testing"
+        android:textColor="@color/white"
         android:translationZ="12dp"
         android:layout_marginTop="450dp"
-        android:layout_marginLeft="125dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginBottom="150dp"
+        android:layout_marginRight="50dp"
         android:textSize="25dp"
         />
 

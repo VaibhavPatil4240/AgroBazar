@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,14 +45,15 @@ public class singleProduct_Fragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    String s;
+    String s,amount;
     int ratings=0;
     boolean stockFlag=true;
     View bkView;
-    TextView name,dileveryExp,disc,price,cancel,rateSeller2;
+    EditText amountToBuy;
+    TextView name,dileveryExp,disc,price,cancel,rateSeller2,Amountunit;
     ImageView prodImg,st1,st2,st3,st4,st5,bkImg,rst1,rst2,rst3,rst4,rst5;
     boolean s1,s2,s3,s4,s5;
-    Button rateSeller;
+    Button rateSeller,buyNow;
     final static String imgURL="https://agrobazarvaibhavpatil.000webhostapp.com/ProductImages/";
     public HomePageDatum data;
     singleMainListner smListner;
@@ -97,12 +99,16 @@ public class singleProduct_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_single_product, container, false);
+        buyNow=view.findViewById(R.id.buyNow);
+        amountToBuy=view.findViewById(R.id.amountEditText);
+        Amountunit=view.findViewById(R.id.unitForAmount);
         s1=s2=s3=s4=s5=false;
         name=view.findViewById(R.id.prodName);
         name.setText(data.getName());
         price=view.findViewById(R.id.price);
         price.setText("Price :"+data.getPrice()+" ₹/ "+data.getUnit());
         disc=view.findViewById(R.id.disc);
+        Amountunit.setText("/ "+data.getUnit());
         disc.setText(data.getDescription());
         prodImg=view.findViewById(R.id.prodImg);
         Glide.with(prodImg.getContext()).load(imgURL+data.getImg()).into(prodImg);
@@ -220,6 +226,32 @@ public class singleProduct_Fragment extends Fragment {
             }
         });
         RateSeller(false,false);
+        buyNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Integer.parseInt(data.getStock())<1)
+                {
+                    Toast.makeText(getContext(),"Sorry, Product is out of stock!",Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    amount=amountToBuy.getText().toString().trim();
+                    if(amount.isEmpty())
+                    {
+                        Toast.makeText(getContext(),"Please enter the amount you want to buy",Toast.LENGTH_SHORT).show();
+                    }
+                    else if (Integer.parseInt(amount)>Integer.parseInt(data.getStock()))
+                    {
+                        Toast.makeText(getContext(),"Available stock is :"+data.getStock()+" "+data.getUnit(),Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        ((MainActivity)getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.container,new address_Fragment(true,data,amount)).addToBackStack(null).commit();
+                    }
+                }
+
+            }
+        });
         return view;
     }
 
@@ -276,13 +308,15 @@ public class singleProduct_Fragment extends Fragment {
         }
         if(Integer.parseInt(data.getStock())==0)
         {
-            dileveryExp.setTextColor(ContextCompat.getColor(getContext(),R.color.red));
+            if(!(getContext()==null))
+            {
+                dileveryExp.setTextColor(ContextCompat.getColor(getContext(),R.color.red));
+            }
             dileveryExp.setText("Out of Stock! Unable to dilever the product");
             stockFlag=false;
         }
         else
         {
-            Log.d("Time", String.valueOf(Hr));
             dileveryExp.setTextColor(ContextCompat.getColor(getContext(),R.color.green));
             if(Hr>6 && Hr<16)
             {
